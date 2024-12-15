@@ -7,14 +7,14 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { Flask, Leaf, Droplets } from "lucide-react";
+import { TestTube2, Leaf, Droplets } from "lucide-react";
 
 const labs = [
   {
     id: "soil",
     name: "Soil Testing Lab",
     description: "Comprehensive soil analysis for optimal crop growth",
-    icon: Flask,
+    icon: TestTube2,
   },
   {
     id: "plant",
