@@ -13,27 +13,31 @@ export const UpcomingBookings = () => {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {bookings.map((booking) => (
-            <div
-              key={booking.id}
-              className="flex items-center gap-4 p-4 border rounded-lg hover:bg-accent/10 transition-colors"
-            >
-              <CalendarDays className="text-primary" size={24} />
-              <div className="flex-1">
-                <h3 className="font-medium">{booking.lab}</h3>
-                <div className="flex gap-4 text-sm text-gray-600 mt-1">
-                  <span className="flex items-center gap-1">
-                    <CalendarDays size={16} />
-                    {booking.date}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock size={16} />
-                    {booking.time}
-                  </span>
+          {bookings.length === 0 ? (
+            <p className="text-gray-500 text-center py-4">No upcoming bookings</p>
+          ) : (
+            bookings.map((booking) => (
+              <div
+                key={booking.id}
+                className="flex items-center gap-4 p-4 border rounded-lg hover:bg-accent/10 transition-colors"
+              >
+                <CalendarDays className="text-primary" size={24} />
+                <div className="flex-1">
+                  <h3 className="font-medium">{booking.lab}</h3>
+                  <div className="flex gap-4 text-sm text-gray-600 mt-1">
+                    <span className="flex items-center gap-1">
+                      <CalendarDays size={16} />
+                      {booking.date}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock size={16} />
+                      {booking.time}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </CardContent>
     </Card>

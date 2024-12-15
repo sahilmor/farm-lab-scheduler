@@ -1,10 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { UpcomingBookings } from "@/components/UpcomingBookings";
+import { LabCards } from "@/components/LabCards";
 import { useNavigate } from "react-router-dom";
 import { CalendarPlus } from "lucide-react";
+import { useRecoilValue } from 'recoil';
+import { bookingsSelector } from "@/store/bookingStore";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const bookings = useRecoilValue(bookingsSelector);
 
   return (
     <div className="container mx-auto py-8">
@@ -23,7 +27,21 @@ const Dashboard = () => {
           New Booking
         </Button>
       </div>
-      <UpcomingBookings />
+
+      {bookings.length > 0 ? (
+        <UpcomingBookings />
+      ) : (
+        <div className="mb-12 text-center">
+          <p className="text-gray-600 mb-8">
+            You don't have any upcoming bookings. Browse our available labs below and book your first appointment!
+          </p>
+        </div>
+      )}
+
+      <div className="mt-8">
+        <h2 className="text-2xl font-semibold mb-6">Available Laboratories</h2>
+        <LabCards />
+      </div>
     </div>
   );
 };
