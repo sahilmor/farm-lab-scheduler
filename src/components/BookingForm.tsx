@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSetRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,123 +18,66 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { bookingsState } from "@/store/bookingStore";
-import { TestTube2, Leaf, Droplets } from "lucide-react";
 
-const labs = [
-  {
-    id: "soil",
-    name: "Soil Testing Lab",
-    description: "Comprehensive soil analysis for optimal crop growth",
-    icon: TestTube2,
-  },
-  {
-    id: "plant",
-    name: "Plant Pathology Lab",
-    description: "Diagnose and treat plant diseases effectively",
-    icon: Leaf,
-  },
-  {
-    id: "water",
-    name: "Water Quality Lab",
-    description: "Test water quality for irrigation and farming needs",
-    icon: Droplets,
-  },
-];
-
-const commonIssues = {
-  soil: [
-    "Nutrient Deficiency",
-    "pH Imbalance",
-    "Soil Structure Problems",
-    "Other",
-  ],
-  plant: [
-    "Disease Diagnosis",
-    "Pest Infestation",
-    "Growth Issues",
-    "Other",
-  ],
-  water: [
-    "Quality Testing",
-    "Contamination Check",
-    "Mineral Analysis",
-    "Other",
-  ],
+const labNames = {
+  soil: "Soil Testing Lab",
+  plant: "Plant Pathology Lab",
+  water: "Water Quality Lab",
 };
 
 export const BookingForm = () => {
-  const [selectedLab, setSelectedLab] = useState<string | null>(null);
+  const [lab, setLab] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
-  const [issue, setIssue] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
   const setBookings = useSetRecoilState(bookingsState);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedLab) return;
-
-    const selectedLabData = labs.find(lab => lab.id === selectedLab);
-    if (!selectedLabData) return;
-
+    
     setBookings((prevBookings) => [
       ...prevBookings,
       {
         id: prevBookings.length ? Math.max(...prevBookings.map((b) => b.id)) + 1 : 1,
-        lab: selectedLabData.name,
+        lab: labNames[lab as keyof typeof labNames],
         date,
         time,
-        issue,
       },
     ]);
     
     toast({
       title: "Booking Confirmed!",
-      description: `Your booking for ${selectedLabData.name} on ${date} at ${time} has been confirmed.`,
+      description: `Your booking for ${labNames[lab as keyof typeof labNames]} on ${date} at ${time} has been confirmed.`,
     });
     
     navigate("/");
   };
 
-  if (!selectedLab) {
-    return (
-      <div className="container mx-auto py-8">
-        <h2 className="text-2xl font-bold text-center mb-6">Select a Laboratory</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {labs.map((lab) => {
-            const Icon = lab.icon;
-            return (
-              <Card 
-                key={lab.id} 
-                className="hover:shadow-lg transition-shadow cursor-pointer"
-                onClick={() => setSelectedLab(lab.id)}
-              >
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <Icon className="h-8 w-8 text-primary" />
-                    <CardTitle className="text-xl">{lab.name}</CardTitle>
-                  </div>
-                  <CardDescription>{lab.description}</CardDescription>
-                </CardHeader>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <Card className="w-full max-w-lg mx-auto">
       <CardHeader>
-        <CardTitle>Complete Your Booking</CardTitle>
+        <CardTitle>Book a Lab</CardTitle>
         <CardDescription>
-          Select your preferred date, time, and describe your issue
+          Select your preferred lab, date, and time slot
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Select Lab</label>
+            <Select onValueChange={setLab} required>
+              <SelectTrigger>
+                <SelectValue placeholder="Choose a lab" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="soil">Soil Testing Lab</SelectItem>
+                <SelectItem value="plant">Plant Pathology Lab</SelectItem>
+                <SelectItem value="water">Water Quality Lab</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className="space-y-2">
             <label className="text-sm font-medium">Select Date</label>
             <input
@@ -162,35 +105,9 @@ export const BookingForm = () => {
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Select Issue</label>
-            <Select onValueChange={setIssue} required>
-              <SelectTrigger>
-                <SelectValue placeholder="Choose your issue" />
-              </SelectTrigger>
-              <SelectContent>
-                {commonIssues[selectedLab as keyof typeof commonIssues].map((issue) => (
-                  <SelectItem key={issue} value={issue}>
-                    {issue}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="flex gap-4">
-            <Button 
-              type="button" 
-              variant="outline" 
-              className="w-full"
-              onClick={() => setSelectedLab(null)}
-            >
-              Back
-            </Button>
-            <Button type="submit" className="w-full">
-              Confirm Booking
-            </Button>
-          </div>
+          <Button type="submit" className="w-full">
+            Confirm Booking
+          </Button>
         </form>
       </CardContent>
     </Card>
