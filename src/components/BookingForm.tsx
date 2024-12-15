@@ -16,6 +16,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
+import { useBookings } from "@/contexts/BookingContext";
+
+const labNames = {
+  soil: "Soil Testing Lab",
+  plant: "Plant Pathology Lab",
+  water: "Water Quality Lab",
+};
 
 export const BookingForm = () => {
   const [lab, setLab] = useState("");
@@ -23,14 +30,20 @@ export const BookingForm = () => {
   const [time, setTime] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { addBooking } = useBookings();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Here you would typically make an API call to save the booking
+    addBooking({
+      lab: labNames[lab as keyof typeof labNames],
+      date,
+      time,
+    });
+    
     toast({
       title: "Booking Confirmed!",
-      description: `Your booking for ${lab} on ${date} at ${time} has been confirmed.`,
+      description: `Your booking for ${labNames[lab as keyof typeof labNames]} on ${date} at ${time} has been confirmed.`,
     });
     
     navigate("/");
@@ -78,11 +91,11 @@ export const BookingForm = () => {
                 <SelectValue placeholder="Choose a time slot" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="9:00">9:00 AM</SelectItem>
-                <SelectItem value="10:00">10:00 AM</SelectItem>
-                <SelectItem value="11:00">11:00 AM</SelectItem>
-                <SelectItem value="14:00">2:00 PM</SelectItem>
-                <SelectItem value="15:00">3:00 PM</SelectItem>
+                <SelectItem value="9:00 AM">9:00 AM</SelectItem>
+                <SelectItem value="10:00 AM">10:00 AM</SelectItem>
+                <SelectItem value="11:00 AM">11:00 AM</SelectItem>
+                <SelectItem value="2:00 PM">2:00 PM</SelectItem>
+                <SelectItem value="3:00 PM">3:00 PM</SelectItem>
               </SelectContent>
             </Select>
           </div>

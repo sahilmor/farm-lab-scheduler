@@ -1,22 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CalendarDays, Clock } from "lucide-react";
+import { useBookings } from "@/contexts/BookingContext";
 
 export const UpcomingBookings = () => {
-  // This would typically come from a backend
-  const bookings = [
-    {
-      id: 1,
-      lab: "Soil Testing Lab",
-      date: "2024-03-20",
-      time: "10:00 AM",
-    },
-    {
-      id: 2,
-      lab: "Plant Pathology Lab",
-      date: "2024-03-22",
-      time: "2:00 PM",
-    },
-  ];
+  const { bookings } = useBookings();
 
   return (
     <Card>
