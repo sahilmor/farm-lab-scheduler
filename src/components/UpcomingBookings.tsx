@@ -1,9 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CalendarDays, Clock } from "lucide-react";
-import { useBookings } from "@/contexts/BookingContext";
+import { useRecoilValue } from 'recoil';
+import { bookingsSelector } from "@/store/bookingStore";
 
 export const UpcomingBookings = () => {
-  const { bookings } = useBookings();
+  const bookings = useRecoilValue(bookingsSelector);
 
   return (
     <Card>

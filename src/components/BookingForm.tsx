@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import { useBookings } from "@/contexts/BookingContext";
+import { bookingsState } from "@/store/bookingStore";
 
 const labNames = {
   soil: "Soil Testing Lab",
@@ -30,16 +31,20 @@ export const BookingForm = () => {
   const [time, setTime] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { addBooking } = useBookings();
+  const setBookings = useSetRecoilState(bookingsState);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    addBooking({
-      lab: labNames[lab as keyof typeof labNames],
-      date,
-      time,
-    });
+    setBookings((prevBookings) => [
+      ...prevBookings,
+      {
+        id: prevBookings.length ? Math.max(...prevBookings.map((b) => b.id)) + 1 : 1,
+        lab: labNames[lab as keyof typeof labNames],
+        date,
+        time,
+      },
+    ]);
     
     toast({
       title: "Booking Confirmed!",
