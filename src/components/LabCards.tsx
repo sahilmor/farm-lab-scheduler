@@ -55,7 +55,8 @@ export const LabCards = () => {
               </Button>
             </CardContent>
           </Card>
-        ))}
+        );
+      })}
     </div>
   );
 };
