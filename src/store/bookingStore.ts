@@ -5,6 +5,8 @@ export interface Booking {
   lab: string;
   date: string;
   time: string;
+  issue: string;
+  description: string;
 }
 
 export const bookingsState = atom<Booking[]>({
