@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { UpcomingBookings } from "@/components/UpcomingBookings";
-import { LabCards } from "@/components/LabCards";
 import { useNavigate } from "react-router-dom";
 import { CalendarPlus } from "lucide-react";
 import { useRecoilValue } from 'recoil';
@@ -33,15 +32,10 @@ const Dashboard = () => {
       ) : (
         <div className="mb-12 text-center">
           <p className="text-gray-600 mb-8">
-            You don't have any upcoming bookings. Browse our available labs below and book your first appointment!
+            You don't have any upcoming bookings. Click the New Booking button to schedule your first appointment!
           </p>
         </div>
       )}
-
-      <div className="mt-8">
-        <h2 className="text-2xl font-semibold mb-6">Available Laboratories</h2>
-        <LabCards />
-      </div>
     </div>
   );
 };

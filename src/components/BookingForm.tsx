@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { bookingsState } from "@/store/bookingStore";
 import { TestTube2, Leaf, Droplets } from "lucide-react";
@@ -67,6 +68,7 @@ export const BookingForm = () => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [issue, setIssue] = useState("");
+  const [description, setDescription] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
   const setBookings = useSetRecoilState(bookingsState);
@@ -86,6 +88,7 @@ export const BookingForm = () => {
         date,
         time,
         issue,
+        description,
       },
     ]);
     
@@ -130,11 +133,38 @@ export const BookingForm = () => {
       <CardHeader>
         <CardTitle>Complete Your Booking</CardTitle>
         <CardDescription>
-          Select your preferred date, time, and describe your issue
+          Fill in the details for your appointment
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Select Issue</label>
+            <Select onValueChange={setIssue} required>
+              <SelectTrigger>
+                <SelectValue placeholder="Choose your issue" />
+              </SelectTrigger>
+              <SelectContent>
+                {commonIssues[selectedLab as keyof typeof commonIssues].map((issue) => (
+                  <SelectItem key={issue} value={issue}>
+                    {issue}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Describe Your Issue</label>
+            <Textarea
+              placeholder="Please provide more details about your issue..."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="min-h-[100px]"
+              required
+            />
+          </div>
+
           <div className="space-y-2">
             <label className="text-sm font-medium">Select Date</label>
             <input
@@ -158,22 +188,6 @@ export const BookingForm = () => {
                 <SelectItem value="11:00 AM">11:00 AM</SelectItem>
                 <SelectItem value="2:00 PM">2:00 PM</SelectItem>
                 <SelectItem value="3:00 PM">3:00 PM</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Select Issue</label>
-            <Select onValueChange={setIssue} required>
-              <SelectTrigger>
-                <SelectValue placeholder="Choose your issue" />
-              </SelectTrigger>
-              <SelectContent>
-                {commonIssues[selectedLab as keyof typeof commonIssues].map((issue) => (
-                  <SelectItem key={issue} value={issue}>
-                    {issue}
-                  </SelectItem>
-                ))}
               </SelectContent>
             </Select>
           </div>
