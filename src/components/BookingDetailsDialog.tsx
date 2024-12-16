@@ -6,13 +6,13 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { CalendarDays, Clock, TestTube2, Leaf, Droplets } from "lucide-react";
-import { Booking, cancelBooking } from "@/store/bookingStore";
+import { BookingSlot, cancelBookingSlot } from "@/store/bookingStore";
 import { useSetRecoilState } from 'recoil';
-import { bookingsState } from "@/store/bookingStore";
+import { bookingSlotsState } from "@/store/bookingStore";
 import { useToast } from "@/components/ui/use-toast";
 
 interface BookingDetailsDialogProps {
-  booking: Booking;
+  booking: BookingSlot;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -36,12 +36,12 @@ export const BookingDetailsDialog = ({
   onOpenChange,
 }: BookingDetailsDialogProps) => {
   const Icon = getLabIcon(booking.lab);
-  const setBookings = useSetRecoilState(bookingsState);
+  const setBookings = useSetRecoilState(bookingSlotsState);
   const { toast } = useToast();
 
   const handleCancelBooking = async () => {
     try {
-      await cancelBooking(booking.id);
+      await cancelBookingSlot(booking.id);
       setBookings((prevBookings) => 
         prevBookings.filter((b) => b.id !== booking.id)
       );

@@ -3,19 +3,19 @@ import { UpcomingBookings } from "@/components/UpcomingBookings";
 import { useNavigate } from "react-router-dom";
 import { CalendarPlus } from "lucide-react";
 import { useSetRecoilState } from 'recoil';
-import { bookingsState, fetchBookings } from "@/store/bookingStore";
+import { bookingSlotsState, fetchBookingSlots } from "@/store/bookingStore";
 import { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const setBookings = useSetRecoilState(bookingsState);
+  const setBookings = useSetRecoilState(bookingSlotsState);
   const { toast } = useToast();
 
   useEffect(() => {
     const loadBookings = async () => {
       try {
-        const bookings = await fetchBookings();
+        const bookings = await fetchBookingSlots();
         setBookings(bookings);
       } catch (error) {
         toast({
