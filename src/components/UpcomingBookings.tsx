@@ -1,12 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CalendarDays, Clock } from "lucide-react";
 import { useRecoilValue } from 'recoil';
-import { bookingsSelector } from "@/store/bookingStore";
+import { bookingSlotsSelector } from "@/store/bookingStore";
 import { useState } from "react";
 import { BookingDetailsDialog } from "./BookingDetailsDialog";
 
 export const UpcomingBookings = () => {
-  const bookings = useRecoilValue(bookingsSelector);
+  const bookings = useRecoilValue(bookingSlotsSelector);
   const [selectedBooking, setSelectedBooking] = useState<number | null>(null);
 
   return (
