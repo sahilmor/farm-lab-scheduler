@@ -2,12 +2,32 @@ import { Button } from "@/components/ui/button";
 import { UpcomingBookings } from "@/components/UpcomingBookings";
 import { useNavigate } from "react-router-dom";
 import { CalendarPlus } from "lucide-react";
-import { useRecoilValue } from 'recoil';
-import { bookingsSelector } from "@/store/bookingStore";
+import { useSetRecoilState } from 'recoil';
+import { bookingsState, fetchBookings } from "@/store/bookingStore";
+import { useEffect } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const bookings = useRecoilValue(bookingsSelector);
+  const setBookings = useSetRecoilState(bookingsState);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const loadBookings = async () => {
+      try {
+        const bookings = await fetchBookings();
+        setBookings(bookings);
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to load bookings. Please refresh the page.",
+          variant: "destructive",
+        });
+      }
+    };
+
+    loadBookings();
+  }, [setBookings, toast]);
 
   return (
     <div className="container mx-auto py-8">
@@ -27,15 +47,7 @@ const Dashboard = () => {
         </Button>
       </div>
 
-      {bookings.length > 0 ? (
-        <UpcomingBookings />
-      ) : (
-        <div className="mb-12 text-center">
-          <p className="text-gray-600 mb-8">
-            You don't have any upcoming bookings. Click the New Booking button to schedule your first appointment!
-          </p>
-        </div>
-      )}
+      <UpcomingBookings />
     </div>
   );
 };

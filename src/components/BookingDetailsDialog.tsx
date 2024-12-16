@@ -4,8 +4,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { CalendarDays, Clock, TestTube2, Leaf, Droplets } from "lucide-react";
-import { Booking } from "@/store/bookingStore";
+import { Booking, cancelBooking } from "@/store/bookingStore";
+import { useSetRecoilState } from 'recoil';
+import { bookingsState } from "@/store/bookingStore";
+import { useToast } from "@/components/ui/use-toast";
 
 interface BookingDetailsDialogProps {
   booking: Booking;
@@ -32,6 +36,28 @@ export const BookingDetailsDialog = ({
   onOpenChange,
 }: BookingDetailsDialogProps) => {
   const Icon = getLabIcon(booking.lab);
+  const setBookings = useSetRecoilState(bookingsState);
+  const { toast } = useToast();
+
+  const handleCancelBooking = async () => {
+    try {
+      await cancelBooking(booking.id);
+      setBookings((prevBookings) => 
+        prevBookings.filter((b) => b.id !== booking.id)
+      );
+      toast({
+        title: "Booking Cancelled",
+        description: "Your booking has been successfully cancelled.",
+      });
+      onOpenChange(false);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to cancel booking. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -63,6 +89,15 @@ export const BookingDetailsDialog = ({
               <p className="text-sm text-gray-600">{booking.description}</p>
             </div>
           )}
+          <div className="border-t pt-4">
+            <Button
+              variant="destructive"
+              className="w-full"
+              onClick={handleCancelBooking}
+            >
+              Cancel Booking
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
